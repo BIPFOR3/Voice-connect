@@ -1,6 +1,6 @@
-# clase_uno
+# Voice-connect
 
-A new Flutter project.
+Este repositorio contiene la construcción y maqueteo de Voice connect, aplicación de grabación de voz diseñada para transformar el sonido en conocimiento accionable. Sirve como herramienta de memoria externa y productividad, permitiendo consultar el audio en lugar de escucharlo completo.
 
 ## Getting Started
 

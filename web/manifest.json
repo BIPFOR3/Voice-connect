@@ -1,6 +1,6 @@
 {
-    "name": "clase_uno",
-    "short_name": "clase_uno",
+    "name": "voice_connect",
+    "short_name": "voice_connect",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
