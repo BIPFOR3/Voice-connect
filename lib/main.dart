@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+
+import 'profile.dart';
 import 'theme/theme.dart';
 import 'recording.dart';
 
@@ -20,8 +22,15 @@ class MainApp extends StatelessWidget {
   }
 }
 
-class RecordingsHomeScreen extends StatelessWidget {
+class RecordingsHomeScreen extends StatefulWidget {
   const RecordingsHomeScreen({super.key});
+
+  @override
+  State<RecordingsHomeScreen> createState() => _RecordingsHomeScreenState();
+}
+
+class _RecordingsHomeScreenState extends State<RecordingsHomeScreen> {
+  int _selectedIndex = 0;
 
   static const List<Map<String, String>> _recordings = [
     {'title': 'Grabación 10', 'date': 'Hoy, 4:15 p.m.', 'duration': '00:39'},
@@ -38,43 +47,27 @@ class RecordingsHomeScreen extends StatelessWidget {
       body: SafeArea(
         child: Stack(
           children: [
-            // Contenido principal scrolleable
-            ListView(
-              clipBehavior: Clip.none,
-              padding: const EdgeInsets.symmetric(
-                horizontal: AppSpacing.spacing400,
-                vertical: AppSpacing.spacing200,
-              ),
+            IndexedStack(
+              index: _selectedIndex,
               children: [
-                _buildTopMenu(),
-                const SizedBox(height: AppSpacing.spacing300),
-                _buildHeaderTitle(),
-                const SizedBox(height: AppSpacing.spacing300),
-                _buildSearchBar(),
-                const SizedBox(height: AppSpacing.spacing400),
-                _buildTabsSection(),
-                const SizedBox(height: AppSpacing.spacing400),
-                _buildRecordingsList(),
-                // Espacio inferior para que el FAB y el BottomBar no tapen la lista
-                const SizedBox(height: 140),
+                _buildRecordingsContent(context),
+                _buildCommunityContent(context),
+                const ProfileScreen(),
               ],
             ),
 
-            // Botón flotante de micrófono (FAB)
-            Positioned(
-              right: AppSpacing.spacing400,
-              bottom: 96,
-              child: _buildMicFab(),
-            ),
-
-            // Barra de navegación inferior tipo píldora
-            Positioned(
-              left: 0,
-              right: 0,
-              bottom: AppSpacing.spacing400,
-              child: Center(
-                child: _buildFloatingBottomBar(),
+            if (_selectedIndex == 0)
+              Positioned(
+                right: AppSpacing.spacing400,
+                bottom: AppSizes.micFabBottomOffset,
+                child: _buildMicFab(),
               ),
+
+            Positioned(
+              left: AppSizes.zero,
+              right: AppSizes.zero,
+              bottom: AppSpacing.spacing400,
+              child: Center(child: _buildFloatingBottomBar()),
             ),
           ],
         ),
@@ -82,9 +75,48 @@ class RecordingsHomeScreen extends StatelessWidget {
     );
   }
 
-  // ==========================================
-  // WIDGETS DE SECCIÓN
-  // ==========================================
+  Widget _buildRecordingsContent(BuildContext context) {
+    return ListView(
+      clipBehavior: Clip.none,
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppSpacing.spacing400,
+        vertical: AppSpacing.spacing200,
+      ),
+      children: [
+        _buildTopMenu(),
+        const SizedBox(height: AppSpacing.spacing300),
+        _buildHeaderTitle(context),
+        const SizedBox(height: AppSpacing.spacing300),
+        _buildSearchBar(context),
+        const SizedBox(height: AppSpacing.spacing400),
+        _buildTabsSection(context),
+        const SizedBox(height: AppSpacing.spacing400),
+        _buildRecordingsList(),
+        const SizedBox(height: AppSizes.bottomNavigationReservedSpace),
+      ],
+    );
+  }
+
+  Widget _buildCommunityContent(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppSpacing.spacing400,
+        vertical: AppSpacing.spacing200,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _buildTopMenu(),
+          const SizedBox(height: AppSpacing.spacing300),
+          Text(
+            'Comunidad',
+            style: Theme.of(context).textTheme.headlineLarge!
+                .copyWith(color: AppColors.gs1000, fontWeight: FontWeight.bold),
+          ),
+        ],
+      ),
+    );
+  }
 
   Widget _buildTopMenu() {
     return Align(
@@ -95,24 +127,22 @@ class RecordingsHomeScreen extends StatelessWidget {
         icon: const Icon(
           Icons.menu,
           color: AppColors.gs1000,
-          size: 28,
+          size: AppIconSizes.xl,
         ),
         onPressed: () {},
       ),
     );
   }
 
-  Widget _buildHeaderTitle() {
+  Widget _buildHeaderTitle(BuildContext context) {
     return Text(
       'Mis Grabaciones',
-      style: AppTypography.h4.copyWith(
-        color: AppColors.gs1000,
-        fontWeight: FontWeight.bold,
-      ),
+      style: Theme.of(context).textTheme.headlineLarge!
+          .copyWith(color: AppColors.gs1000, fontWeight: FontWeight.bold),
     );
   }
 
-  Widget _buildSearchBar() {
+  Widget _buildSearchBar(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(
         horizontal: AppPadding.md,
@@ -132,12 +162,11 @@ class RecordingsHomeScreen extends StatelessWidget {
           const SizedBox(width: AppSpacing.spacing200),
           Expanded(
             child: TextField(
-              style: AppTypography.body1,
+              style: Theme.of(context).textTheme.bodyLarge,
               decoration: InputDecoration(
                 hintText: '',
-                hintStyle: AppTypography.body2.copyWith(
-                  color: AppTextInputTokens.holder,
-                ),
+                hintStyle: Theme.of(context).textTheme.bodyMedium!
+                    .copyWith(color: AppTextInputTokens.holder),
                 border: InputBorder.none,
                 isDense: true,
                 contentPadding: EdgeInsets.zero,
@@ -149,24 +178,23 @@ class RecordingsHomeScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildTabsSection() {
+  Widget _buildTabsSection(BuildContext context) {
     return Row(
       children: [
-        // Tab Activa: Todas
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
                 'Todas',
-                style: AppTypography.subtitle1.copyWith(
+                style: Theme.of(context).textTheme.titleLarge!.copyWith(
                   color: AppColors.gs1000,
                   fontWeight: FontWeight.w600,
                 ),
               ),
               const SizedBox(height: AppSpacing.spacing100),
               Container(
-                height: 6,
+                height: AppSizes.indicatorHeight,
                 decoration: BoxDecoration(
                   color: AppSemanticColors.primary,
                   borderRadius: BorderRadius.circular(AppRadius.s),
@@ -176,20 +204,18 @@ class RecordingsHomeScreen extends StatelessWidget {
           ),
         ),
         const SizedBox(width: AppSpacing.spacing400),
-        // Tab Inactiva: Favoritos
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
                 'Favoritos',
-                style: AppTypography.subtitle1.copyWith(
-                  color: AppColors.gs1000,
-                ),
+                style: Theme.of(context).textTheme.titleLarge!
+                    .copyWith(color: AppColors.gs1000),
               ),
               const SizedBox(height: AppSpacing.spacing100),
               Container(
-                height: 6,
+                height: AppSizes.indicatorHeight,
                 decoration: BoxDecoration(
                   color: AppColors.gs300,
                   borderRadius: BorderRadius.circular(AppRadius.s),
@@ -224,14 +250,12 @@ class RecordingsHomeScreen extends StatelessWidget {
           onTap: () {
             Navigator.push(
               context,
-              MaterialPageRoute(
-                builder: (context) => RecordingScreen(),
-              ),
+              MaterialPageRoute(builder: (context) => RecordingScreen()),
             );
           },
           child: Container(
-            width: 72,
-            height: 72,
+            width: AppSizes.micFab,
+            height: AppSizes.micFab,
             decoration: const BoxDecoration(
               color: AppButtonTokens.filledBg,
               shape: BoxShape.circle,
@@ -240,7 +264,7 @@ class RecordingsHomeScreen extends StatelessWidget {
             child: const Icon(
               Icons.mic,
               color: AppButtonTokens.filledLabel,
-              size: 34,
+              size: AppIconSizes.mic,
             ),
           ),
         );
@@ -256,58 +280,69 @@ class RecordingsHomeScreen extends StatelessWidget {
       ),
       decoration: BoxDecoration(
         color: AppTextInputTokens.defaultBg,
-        borderRadius: BorderRadius.circular(100),
+        borderRadius: BorderRadius.circular(AppRadius.radius),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          // Ítem activo (Home)
-          Container(
-            padding: const EdgeInsets.symmetric(
-              horizontal: AppPadding.lg,
-              vertical: AppPadding.sm,
-            ),
-            decoration: BoxDecoration(
-              color: AppSemanticColors.surfaceMain,
-              borderRadius: BorderRadius.circular(100),
-            ),
-            child: const Icon(
-              Icons.home,
-              color: AppColors.gs1000,
-              size: 26,
-            ),
+          _buildBottomBarItem(
+            index: 0,
+            icon: Icons.home_outlined,
+            selectedIcon: Icons.home,
+            iconSize: AppIconSizes.lg,
           ),
           const SizedBox(width: AppSpacing.spacing400),
-          // Ítem Comunidad / Grupos
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: AppPadding.md),
-            child: Icon(
-              Icons.groups_outlined,
-              color: AppColors.gs1000,
-              size: 28,
-            ),
+          _buildBottomBarItem(
+            index: 1,
+            icon: Icons.groups_outlined,
+            selectedIcon: Icons.groups,
+            iconSize: AppIconSizes.xl,
           ),
           const SizedBox(width: AppSpacing.spacing400),
-          // Ítem Perfil
-          const Padding(
-            padding: EdgeInsets.symmetric(
-              horizontal: AppPadding.md,
-            ),
-            child: Icon(
-              Icons.person_outline,
-              color: AppColors.gs1000,
-              size: 26,
-            ),
+          _buildBottomBarItem(
+            index: 2,
+            icon: Icons.person_outline,
+            selectedIcon: Icons.person,
+            iconSize: AppIconSizes.lg,
           ),
         ],
       ),
     );
   }
-}
 
-// ==========================================
-// WIDGET AUXILIAR: CARD DE GRABACIÓN
-// ==========================================
+  Widget _buildBottomBarItem({
+    required int index,
+    required IconData icon,
+    required IconData selectedIcon,
+    required double iconSize,
+  }) {
+    final isSelected = _selectedIndex == index;
+
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          _selectedIndex = index;
+        });
+      },
+      child: Container(
+        padding: EdgeInsets.symmetric(
+          horizontal: isSelected ? AppPadding.lg : AppPadding.md,
+          vertical: AppPadding.sm,
+        ),
+        decoration: BoxDecoration(
+          color:
+              isSelected ? AppSemanticColors.surfaceMain : Colors.transparent,
+          borderRadius: BorderRadius.circular(AppRadius.radius),
+        ),
+        child: Icon(
+          isSelected ? selectedIcon : icon,
+          color: AppColors.gs1000,
+          size: iconSize,
+        ),
+      ),
+    );
+  }
+}
 
 class _RecordingCard extends StatelessWidget {
   final String title;
@@ -332,9 +367,8 @@ class _RecordingCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(AppRadius.l),
         border: Border.all(
           color: AppColors.gs300.withValues(alpha: 0.5),
-          width: 0.5,
+          width: AppStroke.hairline,
         ),
-        // Elevación mediante BoxShadow + Token de elevación
         boxShadow: [
           AppElevations.level2,
           BoxShadow(
@@ -347,10 +381,9 @@ class _RecordingCard extends StatelessWidget {
       ),
       child: Row(
         children: [
-          // Botón circular de Play
           Container(
-            width: 44,
-            height: 44,
+            width: AppSizes.playButton,
+            height: AppSizes.playButton,
             decoration: const BoxDecoration(
               color: AppSemanticColors.primary,
               shape: BoxShape.circle,
@@ -358,35 +391,31 @@ class _RecordingCard extends StatelessWidget {
             child: const Icon(
               Icons.play_arrow,
               color: AppSemanticColors.onPrimary,
-              size: 26,
+              size: AppIconSizes.lg,
             ),
           ),
           const SizedBox(width: AppSpacing.spacing300),
-
-          // Textos: Título y Fecha
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   title,
-                  style: AppTypography.subtitle1.copyWith(
-                    color: AppCardTokens.defaultLabel,
-                    fontWeight: FontWeight.w600,
-                  ),
+                  style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                        color: AppCardTokens.defaultLabel,
+                        fontWeight: FontWeight.w600,
+                      ),
                 ),
-                const SizedBox(height: 2),
+                const SizedBox(height: AppSizes.hairlineGap),
                 Text(
                   date,
-                  style: AppTypography.body2.copyWith(
-                    color: AppCardTokens.subtLabel,
-                  ),
+                  style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                        color: AppCardTokens.subtLabel,
+                      ),
                 ),
               ],
             ),
           ),
-
-          // Duración y menú de 3 puntos
           Row(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
@@ -394,16 +423,16 @@ class _RecordingCard extends StatelessWidget {
                 padding: const EdgeInsets.only(top: AppSpacing.spacing200),
                 child: Text(
                   duration,
-                  style: AppTypography.body2.copyWith(
-                    color: AppCardTokens.subtLabel,
-                  ),
+                  style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                        color: AppCardTokens.subtLabel,
+                      ),
                 ),
               ),
               const SizedBox(width: AppSpacing.spacing100),
               Icon(
                 Icons.more_vert,
                 color: AppCardTokens.subtLabel,
-                size: 22,
+                size: AppIconSizes.sm,
               ),
             ],
           ),

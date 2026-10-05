@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'theme/theme.dart';
 
 class RecordingScreen extends StatelessWidget {
@@ -19,11 +20,11 @@ class RecordingScreen extends StatelessWidget {
             children: [
               _buildTopBar(context),
               const SizedBox(height: AppSpacing.spacing600),
-              _buildHeaderAndTimer(),
+              _buildHeaderAndTimer(context),
               const Spacer(),
               _buildWaveformIndicator(),
               const Spacer(),
-              _buildProgressBarSection(),
+              _buildProgressBarSection(context),
               const SizedBox(height: AppSpacing.spacing400),
               _buildControlsSection(context),
               const SizedBox(height: AppSpacing.spacing400),
@@ -44,20 +45,20 @@ class RecordingScreen extends StatelessWidget {
       child: GestureDetector(
         onTap: () => Navigator.maybePop(context),
         child: Container(
-          width: 28,
-          height: 28,
+          width: AppSizes.backButton,
+          height: AppSizes.backButton,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             border: Border.all(
               color: AppColors.gs1000,
-              width: 1.8,
+              width: AppStroke.medium,
             ),
           ),
           child: const Center(
             child: Icon(
               Icons.arrow_left,
               color: AppColors.gs1000,
-              size: 20,
+              size: AppIconSizes.xs,
             ),
           ),
         ),
@@ -65,22 +66,20 @@ class RecordingScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildHeaderAndTimer() {
+  Widget _buildHeaderAndTimer(BuildContext context) {
     return Column(
       children: [
         Text(
           'Grabando',
-          style: AppTypography.h5.copyWith(
-            color: AppColors.gs1000,
-            fontWeight: FontWeight.w600,
-          ),
+          style: Theme.of(context).textTheme.headlineMedium!
+              .copyWith(color: AppColors.gs1000, fontWeight: FontWeight.w600),
         ),
         const SizedBox(height: AppSpacing.spacing600),
         Text(
           '00:01',
-          style: AppTypography.h1.copyWith(
+          style: Theme.of(context).textTheme.displayLarge!.copyWith(
             color: AppColors.gs1000,
-            fontSize: 64,
+            fontSize: AppSizes.timerFontSize,
             fontWeight: FontWeight.w300,
             letterSpacing: 1.5,
           ),
@@ -92,8 +91,8 @@ class RecordingScreen extends StatelessWidget {
   Widget _buildWaveformIndicator() {
     return Center(
       child: Container(
-        width: 6,
-        height: 48,
+        width: AppSizes.waveformWidth,
+        height: AppSizes.waveformHeight,
         decoration: BoxDecoration(
           color: AppSemanticColors.primary,
           borderRadius: BorderRadius.circular(AppRadius.l),
@@ -102,12 +101,12 @@ class RecordingScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildProgressBarSection() {
+  Widget _buildProgressBarSection(BuildContext context) {
     return Column(
       children: [
         // Barra de progreso
         Container(
-          height: 6,
+          height: AppSizes.indicatorHeight,
           width: double.infinity,
           decoration: BoxDecoration(
             color: AppColors.gs400,
@@ -121,15 +120,13 @@ class RecordingScreen extends StatelessWidget {
           children: [
             Text(
               '00:00',
-              style: AppTypography.caption.copyWith(
-                color: AppCardTokens.subtLabel,
-              ),
+              style: Theme.of(context).textTheme.bodySmall!
+                  .copyWith(color: AppCardTokens.subtLabel),
             ),
             Text(
               '00:01',
-              style: AppTypography.caption.copyWith(
-                color: AppCardTokens.subtLabel,
-              ),
+              style: Theme.of(context).textTheme.bodySmall!
+                  .copyWith(color: AppCardTokens.subtLabel),
             ),
           ],
         ),
@@ -145,19 +142,19 @@ class RecordingScreen extends StatelessWidget {
         GestureDetector(
           onTap: () => Navigator.maybePop(context),
           child: Container(
-            width: 48,
-            height: 48,
+            width: AppSizes.controlButton,
+            height: AppSizes.controlButton,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               border: Border.all(
                 color: AppSemanticColors.error,
-                width: 1.5,
+                width: AppStroke.thin,
               ),
             ),
             child: const Icon(
               Icons.close,
               color: AppSemanticColors.error,
-              size: 24,
+              size: AppIconSizes.md,
             ),
           ),
         ),
@@ -167,8 +164,8 @@ class RecordingScreen extends StatelessWidget {
         GestureDetector(
           onTap: () {},
           child: Container(
-            width: 68,
-            height: 68,
+            width: AppSizes.primaryControlButton,
+            height: AppSizes.primaryControlButton,
             decoration: BoxDecoration(
               color: AppButtonTokens.filledBg,
               shape: BoxShape.circle,
@@ -184,7 +181,7 @@ class RecordingScreen extends StatelessWidget {
             child: const Icon(
               Icons.pause,
               color: AppButtonTokens.filledLabel,
-              size: 32,
+              size: AppIconSizes.xxl,
             ),
           ),
         ),
@@ -194,19 +191,19 @@ class RecordingScreen extends StatelessWidget {
         GestureDetector(
           onTap: () {},
           child: Container(
-            width: 48,
-            height: 48,
+            width: AppSizes.controlButton,
+            height: AppSizes.controlButton,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               border: Border.all(
                 color: AppSemanticColors.warning,
-                width: 1.5,
+                width: AppStroke.thin,
               ),
             ),
             child: const Icon(
               Icons.stop_rounded,
               color: AppSemanticColors.warning,
-              size: 26,
+              size: AppIconSizes.lg,
             ),
           ),
         ),

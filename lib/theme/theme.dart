@@ -40,7 +40,7 @@ class AppColors {
   static const success600 = Color(0xFF1BA53D);
   static const success700 = Color(0xFF019331);
   static const success800 = Color(0xFF058227);
-  static const success900 = Color(0xFF058227); 
+  static const success900 = Color(0xFF058227);
 
   // Primitivos Feedback / Error
   static const error50 = Color(0xFFFFE9EC);
@@ -93,6 +93,46 @@ class AppSpacing {
   static const double spacing900 = 48;
 }
 
+class AppSizes {
+  static const double zero = 0;
+  static const double hairlineGap = 2;
+  static const double indicatorHeight = 6;
+
+  static const double backButton = 28;
+  static const double playButton = 44;
+  static const double controlButton = 48;
+  static const double primaryControlButton = 68;
+  static const double micFab = 72;
+
+  static const double waveformWidth = 6;
+  static const double waveformHeight = 48;
+  static const double timerFontSize = 64;
+
+  static const double micFabBottomOffset = 96;
+  static const double bottomNavigationReservedSpace = 140;
+
+  static const double profileAvatar = 152;
+  static const double profileCameraButton = 42;
+  static const double profileFieldHeight = 61;
+  static const double profileHeaderTopGap = 52;
+}
+
+class AppIconSizes {
+  static const double xs = 20;
+  static const double sm = 22;
+  static const double md = 24;
+  static const double lg = 26;
+  static const double xl = 28;
+  static const double xxl = 32;
+  static const double mic = 34;
+}
+
+class AppStroke {
+  static const double hairline = 0.5;
+  static const double thin = 1.5;
+  static const double medium = 1.8;
+}
+
 class AppRadius {
   static const double none = 0;
   static const double xs = 4;
@@ -134,149 +174,155 @@ class AppGap {
 
 class AppElevations {
   static const BoxShadow level1 = BoxShadow(
-    color: Color(0x1A000000), 
-    offset: Offset(0, 1), 
-    blurRadius: 2, 
+    color: Color(0x1A000000),
+    offset: Offset(0, 1),
+    blurRadius: 2,
   );
   static const BoxShadow level2 = BoxShadow(
-    color: Color(0x24000000), 
-    offset: Offset(0, 4), 
-    blurRadius: 8, 
+    color: Color(0x24000000),
+    offset: Offset(0, 4),
+    blurRadius: 8,
   );
   static const BoxShadow level3 = BoxShadow(
-    color: Color(0x29000000), 
-    offset: Offset(0, 8), 
-    blurRadius: 16, 
+    color: Color(0x29000000),
+    offset: Offset(0, 8),
+    blurRadius: 16,
   );
   static const BoxShadow level4 = BoxShadow(
-    color: Color(0x33000000), 
-    offset: Offset(0, 16), 
-    blurRadius: 32, 
+    color: Color(0x33000000),
+    offset: Offset(0, 16),
+    blurRadius: 32,
   );
 }
 
 class AppTypography {
-  static const String fontFamily = 'DM Sans'; 
+  static const String fontFamily = 'DM Sans';
 
   static const TextStyle h1 = TextStyle(
-    fontFamily: fontFamily, 
-    fontSize: 101, 
-    fontWeight: FontWeight.w300, 
-    letterSpacing: -1.49, 
-    color: AppColors.gs1000, 
+    fontFamily: fontFamily,
+    fontSize: 101,
+    fontWeight: FontWeight.w300,
+    letterSpacing: -1.49,
+    color: AppColors.gs1000,
   );
 
   static const TextStyle h2 = TextStyle(
-    fontFamily: fontFamily, 
-    fontSize: 63, 
-    fontWeight: FontWeight.w300, 
-    letterSpacing: -0.79, 
-    color: AppColors.gs1000, 
+    fontFamily: fontFamily,
+    fontSize: 63,
+    fontWeight: FontWeight.w300,
+    letterSpacing: -0.79,
+    color: AppColors.gs1000,
   );
 
   static const TextStyle h3 = TextStyle(
-    fontFamily: fontFamily, 
-    fontSize: 50, 
-    fontWeight: FontWeight.w400, 
-    letterSpacing: 0, 
-    color: AppColors.gs1000, 
+    fontFamily: fontFamily,
+    fontSize: 50,
+    fontWeight: FontWeight.w400,
+    letterSpacing: 0,
+    color: AppColors.gs1000,
   );
 
   static const TextStyle h4 = TextStyle(
-    fontFamily: fontFamily, 
-    fontSize: 36, 
-    fontWeight: FontWeight.w400, 
-    letterSpacing: 0.69, 
-    color: AppColors.gs1000, 
+    fontFamily: fontFamily,
+    fontSize: 36,
+    fontWeight: FontWeight.w400,
+    letterSpacing: 0.69,
+    color: AppColors.gs1000,
   );
 
   static const TextStyle h5 = TextStyle(
-    fontFamily: fontFamily, 
-    fontSize: 25, 
-    fontWeight: FontWeight.w400, 
-    letterSpacing: 0, 
-    color: AppColors.gs1000, 
+    fontFamily: fontFamily,
+    fontSize: 25,
+    fontWeight: FontWeight.w400,
+    letterSpacing: 0,
+    color: AppColors.gs1000,
   );
 
   static const TextStyle h6 = TextStyle(
-    fontFamily: fontFamily, 
-    fontSize: 21, 
-    fontWeight: FontWeight.w500, 
-    letterSpacing: 0.71, 
-    color: AppColors.gs1000, 
+    fontFamily: fontFamily,
+    fontSize: 21,
+    fontWeight: FontWeight.w500,
+    letterSpacing: 0.71,
+    color: AppColors.gs1000,
   );
 
   static const TextStyle subtitle1 = TextStyle(
-    fontFamily: fontFamily, 
-    fontSize: 17, 
-    fontWeight: FontWeight.w400, 
-    letterSpacing: 0.88, 
-    color: AppColors.gs1000, 
+    fontFamily: fontFamily,
+    fontSize: 17,
+    fontWeight: FontWeight.w400,
+    letterSpacing: 0.88,
+    color: AppColors.gs1000,
   );
 
   static const TextStyle subtitle2 = TextStyle(
-    fontFamily: fontFamily, 
-    fontSize: 15, 
-    fontWeight: FontWeight.w500, 
-    letterSpacing: 0.67, 
-    color: AppColors.gs1000, 
+    fontFamily: fontFamily,
+    fontSize: 15,
+    fontWeight: FontWeight.w500,
+    letterSpacing: 0.67,
+    color: AppColors.gs1000,
   );
 
   static const TextStyle body1 = TextStyle(
-    fontFamily: fontFamily, 
-    fontSize: 17, 
-    fontWeight: FontWeight.w400, 
-    letterSpacing: 2.94, 
-    color: AppColors.gs1000, 
+    fontFamily: fontFamily,
+    fontSize: 17,
+    fontWeight: FontWeight.w400,
+    letterSpacing: 2.94,
+    color: AppColors.gs1000,
   );
 
   static const TextStyle body2 = TextStyle(
-    fontFamily: fontFamily, 
-    fontSize: 15, 
-    fontWeight: FontWeight.w400, 
-    letterSpacing: 1.67, 
-    color: AppColors.gs1000, 
+    fontFamily: fontFamily,
+    fontSize: 15,
+    fontWeight: FontWeight.w400,
+    letterSpacing: 1.67,
+    color: AppColors.gs1000,
   );
 
   static const TextStyle button = TextStyle(
-    fontFamily: fontFamily, 
-    fontSize: 15, 
-    fontWeight: FontWeight.w500, 
-    letterSpacing: 8.33, 
-    color: AppColors.gs50, 
+    fontFamily: fontFamily,
+    fontSize: 15,
+    fontWeight: FontWeight.w500,
+    letterSpacing: 8.33,
+    color: AppColors.gs50,
   );
 
   static const TextStyle caption = TextStyle(
-    fontFamily: fontFamily, 
-    fontSize: 13, 
-    fontWeight: FontWeight.w400, 
-    letterSpacing: 3.08, 
-    color: AppColors.gs1000, 
+    fontFamily: fontFamily,
+    fontSize: 13,
+    fontWeight: FontWeight.w400,
+    letterSpacing: 3.08,
+    color: AppColors.gs1000,
   );
 
   static const TextStyle overline = TextStyle(
-    fontFamily: fontFamily, 
-    fontSize: 10, 
-    fontWeight: FontWeight.w400, 
-    letterSpacing: 15, 
-    color: AppColors.gs1000, 
+    fontFamily: fontFamily,
+    fontSize: 10,
+    fontWeight: FontWeight.w400,
+    letterSpacing: 15,
+    color: AppColors.gs1000,
   );
 }
 
 const TextTheme appTextTheme = TextTheme(
-  displayLarge: AppTypography.h1, 
-  displayMedium: AppTypography.h2, 
-  displaySmall: AppTypography.h3, 
-  headlineMedium: AppTypography.h4, 
-  headlineSmall: AppTypography.h5, 
-  titleLarge: AppTypography.h6, 
-  titleMedium: AppTypography.subtitle1, 
-  titleSmall: AppTypography.subtitle2, 
-  bodyLarge: AppTypography.body1, 
-  bodyMedium: AppTypography.body2, 
-  labelLarge: AppTypography.button, 
+  displayLarge: AppTypography.h1,
+  displayMedium: AppTypography.h2,
+  displaySmall: AppTypography.h3,
+
+  headlineLarge: AppTypography.h4,
+  headlineMedium: AppTypography.h5,
+  headlineSmall: AppTypography.h6,
+
+  titleLarge: AppTypography.subtitle1,
+  titleMedium: AppTypography.subtitle2,
+  // titleSmall: AppTypography.subtit,
+
+  bodyLarge: AppTypography.body1,
+  bodyMedium: AppTypography.body2,
   bodySmall: AppTypography.caption,
-  labelSmall: AppTypography.overline, 
+
+  labelLarge: AppTypography.button,
+  //labelMedium: AppTypography.label,
+  labelSmall: AppTypography.overline,
 );
 
 // ==========================================
@@ -285,46 +331,46 @@ const TextTheme appTextTheme = TextTheme(
 
 class AppSemanticColors {
   // Primary
-  static const Color primary = AppColors.primary500; 
-  static const Color primaryHover = AppColors.primary700; 
-  static const Color primaryPressed = AppColors.primary900; 
-  static const Color primaryDisabled = AppColors.primary100; 
-  static const Color onPrimaryDisabled = AppColors.primary200; 
-  static const Color onPrimary = AppColors.gs50; 
-  
+  static const Color primary = AppColors.primary500;
+  static const Color primaryHover = AppColors.primary700;
+  static const Color primaryPressed = AppColors.primary900;
+  static const Color primaryDisabled = AppColors.primary100;
+  static const Color onPrimaryDisabled = AppColors.primary200;
+  static const Color onPrimary = AppColors.gs50;
+
   // Primary Container
-  static const Color primaryContainer = AppColors.primary50; 
-  static const Color primaryContainerHover = AppColors.primary100; 
-  static const Color primaryContainerPressed = AppColors.primary200; 
-  static const Color onPrimaryContainer = AppColors.primary500; 
+  static const Color primaryContainer = AppColors.primary50;
+  static const Color primaryContainerHover = AppColors.primary100;
+  static const Color primaryContainerPressed = AppColors.primary200;
+  static const Color onPrimaryContainer = AppColors.primary500;
 
   // Secondary
-  static const Color secondary = AppColors.secondary200; 
-  static const Color secondaryHover = AppColors.secondary400; 
-  static const Color secondaryPressed = AppColors.secondary600; 
-  static const Color secondaryDisabled = AppColors.secondary100; 
-  static const Color onSecondary = AppColors.gs1000; 
+  static const Color secondary = AppColors.secondary200;
+  static const Color secondaryHover = AppColors.secondary400;
+  static const Color secondaryPressed = AppColors.secondary600;
+  static const Color secondaryDisabled = AppColors.secondary100;
+  static const Color onSecondary = AppColors.gs1000;
 
   // Secondary Container
-  static const Color secondaryContainer = AppColors.secondary50; 
-  static const Color secondaryContainerHover = AppColors.secondary100; 
-  static const Color secondaryContainerPressed = AppColors.secondary200; 
-  static const Color onSecondaryContainer = AppColors.gs1000; 
+  static const Color secondaryContainer = AppColors.secondary50;
+  static const Color secondaryContainerHover = AppColors.secondary100;
+  static const Color secondaryContainerPressed = AppColors.secondary200;
+  static const Color onSecondaryContainer = AppColors.gs1000;
 
   // Surface
-  static const Color surfaceMain = AppColors.gs50; 
-  static const Color onSurfaceMain = AppColors.gs1000; 
+  static const Color surfaceMain = AppColors.gs50;
+  static const Color onSurfaceMain = AppColors.gs1000;
 
   // Feedback
-  static const Color error = AppColors.error500; 
-  static const Color onError = AppColors.gs50; 
-  static const Color success = AppColors.success500; 
-  static const Color onSuccess = AppColors.gs50; 
-  static const Color warning = AppColors.warning500; 
-  static const Color onWarning = AppColors.gs50; 
+  static const Color error = AppColors.error500;
+  static const Color onError = AppColors.gs50;
+  static const Color success = AppColors.success500;
+  static const Color onSuccess = AppColors.gs50;
+  static const Color warning = AppColors.warning500;
+  static const Color onWarning = AppColors.gs50;
 
   // Outline
-  static const Color outline = AppColors.gs500; 
+  static const Color outline = AppColors.gs500;
 }
 
 // ==========================================
@@ -332,122 +378,122 @@ class AppSemanticColors {
 // ==========================================
 
 class AppCardTokens {
-  static const Color defaultBg = AppSemanticColors.surfaceMain; 
-  static const Color defaultIcon = AppSemanticColors.primaryDisabled; 
-  static const Color defaultLabel = AppSemanticColors.onPrimaryContainer; 
-  static const Color selectedBg = AppSemanticColors.primaryContainer; 
-  static const Color selectedIcon = AppSemanticColors.primary; 
-  static const Color selectedLabel = AppSemanticColors.onSecondary; 
-  static const Color disabledBg = AppColors.gs200; 
-  static const Color disabledIcon = AppColors.gs400; 
-  static const Color disabledLabel = AppColors.gs600; 
-  static const Color subtLabel = AppColors.gs600; 
-  static const double iconComm = 36.0; 
-  static const double iconSm = 32.5; 
-  static const double iconProfile = 18.0; 
-  static const double radiusSm = AppRadius.m; 
+  static const Color defaultBg = AppSemanticColors.surfaceMain;
+  static const Color defaultIcon = AppSemanticColors.primaryDisabled;
+  static const Color defaultLabel = AppSemanticColors.onPrimaryContainer;
+  static const Color selectedBg = AppSemanticColors.primaryContainer;
+  static const Color selectedIcon = AppSemanticColors.primary;
+  static const Color selectedLabel = AppSemanticColors.onSecondary;
+  static const Color disabledBg = AppColors.gs200;
+  static const Color disabledIcon = AppColors.gs400;
+  static const Color disabledLabel = AppColors.gs600;
+  static const Color subtLabel = AppColors.gs600;
+  static const double iconComm = 36.0;
+  static const double iconSm = 32.5;
+  static const double iconProfile = 18.0;
+  static const double radiusSm = AppRadius.m;
 }
 
 class AppChipTokens {
-  static const Color defaultBg = AppColors.gs50; 
-  static const Color defaultStroke = AppColors.gs1000; 
-  static const Color defaultLabel = AppColors.gs1000; 
-  static const Color activeBg = AppColors.primary500; 
-  static const Color activeLabel = AppColors.gs50; 
-  static const Color disabledBg = AppColors.gs300; 
-  static const Color disabledLabel = AppColors.gs400; 
-  static const Color disabledStroke = AppColors.gs400; 
-  static const double radiusSm = AppRadius.m; 
+  static const Color defaultBg = AppColors.gs50;
+  static const Color defaultStroke = AppColors.gs1000;
+  static const Color defaultLabel = AppColors.gs1000;
+  static const Color activeBg = AppColors.primary500;
+  static const Color activeLabel = AppColors.gs50;
+  static const Color disabledBg = AppColors.gs300;
+  static const Color disabledLabel = AppColors.gs400;
+  static const Color disabledStroke = AppColors.gs400;
+  static const double radiusSm = AppRadius.m;
 }
 
 class AppDialogTokens {
-  static const Color defaultBg = Color(0xFFF9FAFF); 
-  static const Color defaultLabel = AppColors.primary500; 
-  static const Color defaultIcon = AppColors.primary500; 
-  static const Color defaultIconSuccess = AppSemanticColors.success; 
-  static const Color defaultText = AppColors.gs1000; 
-  static const Color defaultButton = AppColors.gs300; 
-  static const double radiusMd = AppRadius.xl; 
+  static const Color defaultBg = Color(0xFFF9FAFF);
+  static const Color defaultLabel = AppColors.primary500;
+  static const Color defaultIcon = AppColors.primary500;
+  static const Color defaultIconSuccess = AppSemanticColors.success;
+  static const Color defaultText = AppColors.gs1000;
+  static const Color defaultButton = AppColors.gs300;
+  static const double radiusMd = AppRadius.xl;
 }
 
 class AppTabTokens {
-  static const Color defaultBg = AppColors.gs400; 
-  static const Color defaultLabel = AppColors.gs1000; 
-  static const Color activeBg = AppSemanticColors.primary; 
-  static const Color defaultLabel2 = AppColors.gs1000; 
-  static const Color disabled = AppColors.gs300; 
-  static const Color disabledLabel = AppColors.gs600; 
-  static const double radiusXs = AppRadius.xs; 
-  static const double size = 144.0; 
+  static const Color defaultBg = AppColors.gs400;
+  static const Color defaultLabel = AppColors.gs1000;
+  static const Color activeBg = AppSemanticColors.primary;
+  static const Color defaultLabel2 = AppColors.gs1000;
+  static const Color disabled = AppColors.gs300;
+  static const Color disabledLabel = AppColors.gs600;
+  static const double radiusXs = AppRadius.xs;
+  static const double size = 144.0;
 }
 
 class AppBackdropTokens {
-  static const Color defaultBg = Color(0xFFFFFFFF); 
-  static const Color disabledBg = AppColors.gs200; 
-  static const Color defaultLabel = AppColors.gs1000; 
-  static const Color disabledLabel = AppColors.gs500; 
-  static const Color defaultText = AppColors.gs1000; 
-  static const Color defaultSubtitle = AppColors.gs600; 
-  static const double radiusSm = AppRadius.m; 
+  static const Color defaultBg = Color(0xFFFFFFFF);
+  static const Color disabledBg = AppColors.gs200;
+  static const Color defaultLabel = AppColors.gs1000;
+  static const Color disabledLabel = AppColors.gs500;
+  static const Color defaultText = AppColors.gs1000;
+  static const Color defaultSubtitle = AppColors.gs600;
+  static const double radiusSm = AppRadius.m;
 }
 
 class AppOverflowMenuTokens {
-  static const Color defaultBg = AppColors.gs50; 
-  static const Color selectedBg = AppColors.primary50; 
-  static const Color disabledBg = AppColors.gs200; 
-  static const Color defaultLabel = AppColors.gs1000; 
-  static const Color defaultIcon = AppColors.gs1000; 
-  static const Color disabledLabel = AppColors.gs500; 
-  static const Color disabledIcon = AppColors.gs500; 
-  static const double radiusSm = AppRadius.m; 
-  static const double iconSizeSm = 14.0; 
+  static const Color defaultBg = AppColors.gs50;
+  static const Color selectedBg = AppColors.primary50;
+  static const Color disabledBg = AppColors.gs200;
+  static const Color defaultLabel = AppColors.gs1000;
+  static const Color defaultIcon = AppColors.gs1000;
+  static const Color disabledLabel = AppColors.gs500;
+  static const Color disabledIcon = AppColors.gs500;
+  static const double radiusSm = AppRadius.m;
+  static const double iconSizeSm = 14.0;
 }
 
 class AppTextInputTokens {
-  static const Color defaultBg = AppColors.gs300; 
-  static const Color strokeFocused = AppSemanticColors.primaryHover; 
-  static const Color strokeError = AppColors.error500; 
-  static const Color disabledBg = AppColors.gs200; 
-  static const Color iconStroke = AppColors.gs1000; 
-  static const Color iconStrokeDisabled = AppColors.gs500; 
-  static const Color label = AppColors.gs1000; 
-  static const Color holder = AppColors.gs600; 
-  static const Color holderDisabled = AppColors.gs400; 
-  static const double radiusSm = AppRadius.s; 
-  static const double radiusMd = AppRadius.m; 
-  static const double radiusXl = AppRadius.l; 
-  static const double iconSm = 22.0; 
-  static const double iconMd = 24.0; 
-  static const double iconXl = 26.0; 
+  static const Color defaultBg = AppColors.gs300;
+  static const Color strokeFocused = AppSemanticColors.primaryHover;
+  static const Color strokeError = AppColors.error500;
+  static const Color disabledBg = AppColors.gs200;
+  static const Color iconStroke = AppColors.gs1000;
+  static const Color iconStrokeDisabled = AppColors.gs500;
+  static const Color label = AppColors.gs1000;
+  static const Color holder = AppColors.gs600;
+  static const Color holderDisabled = AppColors.gs400;
+  static const double radiusSm = AppRadius.s;
+  static const double radiusMd = AppRadius.m;
+  static const double radiusXl = AppRadius.l;
+  static const double iconSm = 22.0;
+  static const double iconMd = 24.0;
+  static const double iconXl = 26.0;
 }
 
 class AppButtonTokens {
-  static const Color iconActive = AppSemanticColors.onPrimaryContainer; 
-  static const Color iconInactive = AppColors.gs600; 
-  static const Color iconDisabled = AppColors.gs300; 
-  static const Color filledBg = AppSemanticColors.primary; 
-  static const Color filledLabel = AppSemanticColors.onPrimary; 
-  static const Color filledDisabledBg = AppSemanticColors.primaryDisabled; 
-  static const Color filledLabelDisabled = AppSemanticColors.onPrimary; 
-  static const Color outlinedBg = AppSemanticColors.surfaceMain; 
-  static const Color outlinedStroke = AppSemanticColors.primary; 
-  static const Color outlinedLabel = AppSemanticColors.primary; 
-  static const Color outlinedStrokeDisabled = AppSemanticColors.primaryDisabled; 
-  static const Color outlinedLabelDisabled = AppSemanticColors.primaryDisabled; 
-  static const Color iconTextBg = AppSemanticColors.primary; 
-  static const Color iconTextLabel = AppSemanticColors.onPrimary; 
-  static const Color iconTextIcon = AppSemanticColors.primaryContainer; 
+  static const Color iconActive = AppSemanticColors.onPrimaryContainer;
+  static const Color iconInactive = AppColors.gs600;
+  static const Color iconDisabled = AppColors.gs300;
+  static const Color filledBg = AppSemanticColors.primary;
+  static const Color filledLabel = AppSemanticColors.onPrimary;
+  static const Color filledDisabledBg = AppSemanticColors.primaryDisabled;
+  static const Color filledLabelDisabled = AppSemanticColors.onPrimary;
+  static const Color outlinedBg = AppSemanticColors.surfaceMain;
+  static const Color outlinedStroke = AppSemanticColors.primary;
+  static const Color outlinedLabel = AppSemanticColors.primary;
+  static const Color outlinedStrokeDisabled = AppSemanticColors.primaryDisabled;
+  static const Color outlinedLabelDisabled = AppSemanticColors.primaryDisabled;
+  static const Color iconTextBg = AppSemanticColors.primary;
+  static const Color iconTextLabel = AppSemanticColors.onPrimary;
+  static const Color iconTextIcon = AppSemanticColors.primaryContainer;
 }
 
 class AppBottomNavTokens {
-  static const Color defaultBg = AppColors.gs400; 
-  static const Color iconActive = AppColors.gs50; 
-  static const Color iconBg = AppColors.gs1000; 
-  static const Color iconStroke = AppColors.gs1000; 
-  static const Color iconDisabled = AppColors.gs500; 
-  static const Color iconDisabledStroke = AppColors.gs500; 
-  static const double iconSize = 20.0; 
-  static const double radiusSm = AppRadius.xl; 
+  static const Color defaultBg = AppColors.gs400;
+  static const Color iconActive = AppColors.gs50;
+  static const Color iconBg = AppColors.gs1000;
+  static const Color iconStroke = AppColors.gs1000;
+  static const Color iconDisabled = AppColors.gs500;
+  static const Color iconDisabledStroke = AppColors.gs500;
+  static const double iconSize = 20.0;
+  static const double radiusSm = AppRadius.xl;
 }
 
 // ==========================================
@@ -457,25 +503,25 @@ class AppBottomNavTokens {
 abstract final class AppTheme {
   static ThemeData light = FlexThemeData.light(
     colors: const FlexSchemeColor(
-      primary: AppSemanticColors.primary, 
-      primaryContainer: AppSemanticColors.primaryContainer, 
-      secondary: AppSemanticColors.secondary, 
-      secondaryContainer: AppSemanticColors.secondaryContainer, 
-      appBarColor: AppSemanticColors.surfaceMain, 
-      error: AppSemanticColors.error, 
+      primary: AppSemanticColors.primary,
+      primaryContainer: AppSemanticColors.primaryContainer,
+      secondary: AppSemanticColors.secondary,
+      secondaryContainer: AppSemanticColors.secondaryContainer,
+      appBarColor: AppSemanticColors.surfaceMain,
+      error: AppSemanticColors.error,
       errorContainer: AppColors.error500,
     ),
-    textTheme: appTextTheme, 
-    primaryTextTheme: appTextTheme, 
+    textTheme: appTextTheme,
+    primaryTextTheme: appTextTheme,
     subThemesData: const FlexSubThemesData(
-      interactionEffects: true, 
-      tintedDisabledControls: true, 
-      useM2StyleDividerInM3: true, 
-      inputDecoratorIsFilled: true, 
-      inputDecoratorBorderType: FlexInputBorderType.outline, 
-      alignedDropdown: true, 
-      navigationRailUseIndicator: true, 
+      interactionEffects: true,
+      tintedDisabledControls: true,
+      useM2StyleDividerInM3: true,
+      inputDecoratorIsFilled: true,
+      inputDecoratorBorderType: FlexInputBorderType.outline,
+      alignedDropdown: true,
+      navigationRailUseIndicator: true,
     ),
-    visualDensity: FlexColorScheme.comfortablePlatformDensity, 
+    visualDensity: FlexColorScheme.comfortablePlatformDensity,
   );
 }
