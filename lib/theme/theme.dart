@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flex_color_scheme/flex_color_scheme.dart';
 
 // ==========================================
 // 1. PRIMITIVOS (COLORES, ESPACIADOS, RADIOS)
@@ -451,31 +450,34 @@ class AppBottomNavTokens {
 }
 
 // ==========================================
-// 5. CONFIGURACIÓN DEL TEMA (FlexColorScheme)
+// 5. CONFIGURACIÓN DEL TEMA
 // ==========================================
 
 abstract final class AppTheme {
-  static ThemeData light = FlexThemeData.light(
-    colors: const FlexSchemeColor(
-      primary: AppSemanticColors.primary, 
-      primaryContainer: AppSemanticColors.primaryContainer, 
-      secondary: AppSemanticColors.secondary, 
-      secondaryContainer: AppSemanticColors.secondaryContainer, 
-      appBarColor: AppSemanticColors.surfaceMain, 
-      error: AppSemanticColors.error, 
-      errorContainer: AppColors.error500,
+  static ThemeData light = ThemeData(
+    useMaterial3: true,
+    colorScheme: const ColorScheme(
+      brightness: Brightness.light,
+      primary: AppSemanticColors.primary,
+      onPrimary: AppSemanticColors.onPrimary,
+      primaryContainer: AppSemanticColors.primaryContainer,
+      onPrimaryContainer: AppSemanticColors.onPrimaryContainer,
+      secondary: AppSemanticColors.secondary,
+      onSecondary: AppColors.gs50,
+      secondaryContainer: AppSemanticColors.secondaryContainer,
+      onSecondaryContainer: AppColors.secondary500,
+      error: AppSemanticColors.error,
+      onError: AppColors.gs50,
+      surface: AppSemanticColors.surfaceMain,
+      onSurface: AppColors.gs1000,
     ),
-    textTheme: appTextTheme, 
-    primaryTextTheme: appTextTheme, 
-    subThemesData: const FlexSubThemesData(
-      interactionEffects: true, 
-      tintedDisabledControls: true, 
-      useM2StyleDividerInM3: true, 
-      inputDecoratorIsFilled: true, 
-      inputDecoratorBorderType: FlexInputBorderType.outline, 
-      alignedDropdown: true, 
-      navigationRailUseIndicator: true, 
+    scaffoldBackgroundColor: AppSemanticColors.surfaceMain,
+    appBarTheme: const AppBarTheme(
+      backgroundColor: AppSemanticColors.surfaceMain,
+      elevation: 0,
     ),
-    visualDensity: FlexColorScheme.comfortablePlatformDensity, 
+    textTheme: appTextTheme,
+    primaryTextTheme: appTextTheme,
+    visualDensity: VisualDensity.adaptivePlatformDensity,
   );
-}
+}

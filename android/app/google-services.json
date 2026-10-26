@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "574839829287",
+    "project_id": "voice-connect26",
+    "storage_bucket": "voice-connect26.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:574839829287:android:183fec6ff14fbaffddaf02",
+        "android_client_info": {
+          "package_name": "com.example.voice_connect"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDTemBGJDSvS8btczjiXTM228E3dBRzDIk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
