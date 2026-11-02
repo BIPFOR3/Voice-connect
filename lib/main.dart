@@ -9,16 +9,20 @@ import 'firebase_options.dart';
 import 'theme/theme.dart';
 import 'recording.dart';
 
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'auth/auth_gate.dart';
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  try {
-    await Firebase.initializeApp(
-      options: DefaultFirebaseOptions.currentPlatform,
-    );
-  } catch (e) {
-    debugPrint('Firebase init error: $e');
-  }
+ // Inicializar Firebase
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
+  // Inicializar Google Sign-In
+  await GoogleSignIn.instance.initialize();
 
   runApp(const MainApp());
 }
@@ -32,7 +36,7 @@ class MainApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Mis Grabaciones',
       theme: AppTheme.light,
-      home: const RecordingsHomeScreen(),
+      home: const AuthGate(),
     );
   }
 }
@@ -367,6 +371,89 @@ class _RecordingsHomeScreenState extends State<RecordingsHomeScreen> {
   // WIDGETS DE SECCIÓN
   // ==========================================
 
+  void _mostrarOpcionesUsuario() {
+    final user = FirebaseAuth.instance.currentUser;
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.white,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      builder: (ctx) => SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: AppSpacing.spacing600,
+            vertical: AppSpacing.spacing500,
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: 40,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: AppColors.gs400,
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+              const SizedBox(height: 20),
+              CircleAvatar(
+                radius: 30,
+                backgroundColor: AppColors.primary100,
+                child: Text(
+                  (user?.email?.isNotEmpty == true ? user!.email![0] : 'U')
+                      .toUpperCase(),
+                  style: const TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.primary600,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 12),
+              Text(
+                user?.displayName ?? 'Usuario',
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.gs1000,
+                ),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                user?.email ?? 'Sin correo electrónico',
+                style: const TextStyle(
+                  fontSize: 14,
+                  color: AppColors.gs700,
+                ),
+              ),
+              const SizedBox(height: 24),
+              ListTile(
+                leading: const Icon(Icons.logout, color: AppSemanticColors.error),
+                title: const Text(
+                  'Cerrar Sesión',
+                  style: TextStyle(
+                    color: AppSemanticColors.error,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                tileColor: AppColors.error50,
+                onTap: () async {
+                  Navigator.pop(ctx);
+                  await GoogleSignIn.instance.signOut();
+                  await FirebaseAuth.instance.signOut();
+                },
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   Widget _buildTopMenu() {
     return Align(
       alignment: Alignment.centerLeft,
@@ -378,7 +465,7 @@ class _RecordingsHomeScreenState extends State<RecordingsHomeScreen> {
           color: AppColors.gs1000,
           size: 28,
         ),
-        onPressed: () {},
+        onPressed: _mostrarOpcionesUsuario,
       ),
     );
   }
@@ -711,14 +798,18 @@ class _RecordingsHomeScreenState extends State<RecordingsHomeScreen> {
           ),
           const SizedBox(width: AppSpacing.spacing400),
           // Ítem Perfil
-          const Padding(
-            padding: EdgeInsets.symmetric(
-              horizontal: AppPadding.md,
-            ),
-            child: Icon(
-              Icons.person_outline,
-              color: AppColors.gs1000,
-              size: 26,
+          GestureDetector(
+            onTap: _mostrarOpcionesUsuario,
+            behavior: HitTestBehavior.opaque,
+            child: const Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: AppPadding.md,
+              ),
+              child: Icon(
+                Icons.person_outline,
+                color: AppColors.gs1000,
+                size: 26,
+              ),
             ),
           ),
         ],
