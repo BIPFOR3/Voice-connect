@@ -57,7 +57,6 @@ class DefaultFirebaseOptions {
     projectId: 'voice-connect26',
     storageBucket: 'voice-connect26.firebasestorage.app',
   );
-
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyANbRtuMahMo6ClxcEd8-QYTFj_AH9QcSk',
     appId: '1:574839829287:ios:a728b53742a43aefddaf02',
@@ -66,7 +65,6 @@ class DefaultFirebaseOptions {
     storageBucket: 'voice-connect26.firebasestorage.app',
     iosBundleId: 'com.example.voiceConnect',
   );
-
   static const FirebaseOptions macos = FirebaseOptions(
     apiKey: 'AIzaSyANbRtuMahMo6ClxcEd8-QYTFj_AH9QcSk',
     appId: '1:574839829287:ios:a728b53742a43aefddaf02',
