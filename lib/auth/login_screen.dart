@@ -4,6 +4,12 @@ import 'package:google_sign_in/google_sign_in.dart';
 
 import '../theme/theme.dart';
 
+// Instancia reutilizable de GoogleSignIn (API v6)
+final _googleSignIn = GoogleSignIn(
+  serverClientId:
+      '574839829287-th1j9g7ulr50erp617g0vjvruup4r0df.apps.googleusercontent.com',
+);
+
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
@@ -108,30 +114,28 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
-  // Iniciar sesión con Google (tomando la referencia del proyecto)
+  // Iniciar sesión con Google (API v6)
   Future<void> _iniciarSesionGoogle() async {
     setState(() => _cargando = true);
 
     try {
-      final googleUser = await GoogleSignIn.instance.authenticate();
-      final googleAuth = googleUser.authentication;
+      // Abre el selector de cuenta de Google
+      final googleUser = await _googleSignIn.signIn();
+      if (googleUser == null) {
+        // El usuario canceló
+        return;
+      }
+
+      // Obtiene los tokens de autenticación
+      final googleAuth = await googleUser.authentication;
 
       final credential = GoogleAuthProvider.credential(
         idToken: googleAuth.idToken,
+        accessToken: googleAuth.accessToken,
       );
 
+      // Inicia sesión en Firebase con las credenciales de Google
       await FirebaseAuth.instance.signInWithCredential(credential);
-    } on GoogleSignInException catch (e) {
-      if (!mounted) return;
-      if (e.code != GoogleSignInExceptionCode.canceled) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              'Error al ingresar con Google: ${e.description ?? e.code.name}',
-            ),
-          ),
-        );
-      }
     } on FirebaseAuthException catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(

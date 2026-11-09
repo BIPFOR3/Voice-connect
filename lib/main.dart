@@ -13,16 +13,19 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'auth/auth_gate.dart';
 
+// Instancia compartida de GoogleSignIn (v6)
+final _googleSignIn = GoogleSignIn(
+  serverClientId:
+      '574839829287-th1j9g7ulr50erp617g0vjvruup4r0df.apps.googleusercontent.com',
+);
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
- // Inicializar Firebase
+  // Inicializar Firebase
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-
-  // Inicializar Google Sign-In
-  await GoogleSignIn.instance.initialize();
 
   runApp(const MainApp());
 }
@@ -443,7 +446,7 @@ class _RecordingsHomeScreenState extends State<RecordingsHomeScreen> {
                 tileColor: AppColors.error50,
                 onTap: () async {
                   Navigator.pop(ctx);
-                  await GoogleSignIn.instance.signOut();
+                  await _googleSignIn.signOut();
                   await FirebaseAuth.instance.signOut();
                 },
               ),
