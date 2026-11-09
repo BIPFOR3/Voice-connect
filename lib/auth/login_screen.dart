@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
@@ -52,6 +53,13 @@ class _LoginScreenState extends State<LoginScreen> {
         return 'Error de conexión. Verifica tu internet.';
       case 'too-many-requests':
         return 'Demasiados intentos fallidos. Intenta más tarde.';
+      case 'operation-not-allowed':
+        return 'Este proveedor de inicio de sesión no está habilitado en Firebase Authentication.';
+      case 'popup-closed-by-user':
+      case 'canceled':
+        return 'Inicio de sesión cancelado.';
+      case 'account-exists-with-different-credential':
+        return 'Ya existe una cuenta con este correo pero con otro método de acceso.';
       default:
         return 'Error: $code';
     }
@@ -114,28 +122,29 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
-  // Iniciar sesión con Google (API v6)
+  // Iniciar sesión con Google (Soporta Android, Web y Desktop)
   Future<void> _iniciarSesionGoogle() async {
     setState(() => _cargando = true);
 
     try {
-      // Abre el selector de cuenta de Google
-      final googleUser = await _googleSignIn.signIn();
-      if (googleUser == null) {
-        // El usuario canceló
-        return;
+      if (kIsWeb) {
+        final googleProvider = GoogleAuthProvider();
+        await FirebaseAuth.instance.signInWithPopup(googleProvider);
+      } else {
+        try {
+          final googleUser = await _googleSignIn.signIn();
+          if (googleUser == null) return;
+          final googleAuth = await googleUser.authentication;
+          final credential = GoogleAuthProvider.credential(
+            idToken: googleAuth.idToken,
+            accessToken: googleAuth.accessToken,
+          );
+          await FirebaseAuth.instance.signInWithCredential(credential);
+        } catch (_) {
+          final googleProvider = GoogleAuthProvider();
+          await FirebaseAuth.instance.signInWithProvider(googleProvider);
+        }
       }
-
-      // Obtiene los tokens de autenticación
-      final googleAuth = await googleUser.authentication;
-
-      final credential = GoogleAuthProvider.credential(
-        idToken: googleAuth.idToken,
-        accessToken: googleAuth.accessToken,
-      );
-
-      // Inicia sesión en Firebase con las credenciales de Google
-      await FirebaseAuth.instance.signInWithCredential(credential);
     } on FirebaseAuthException catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
@@ -241,20 +250,54 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
-  void _iniciarConApple() {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Inicio de sesión con Apple disponible próximamente.'),
-      ),
-    );
+  // Iniciar sesión con Apple
+  Future<void> _iniciarConApple() async {
+    setState(() => _cargando = true);
+    try {
+      final appleProvider = AppleAuthProvider();
+      if (kIsWeb) {
+        await FirebaseAuth.instance.signInWithPopup(appleProvider);
+      } else {
+        await FirebaseAuth.instance.signInWithProvider(appleProvider);
+      }
+    } on FirebaseAuthException catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(_mapearErrorFirebase(e.code))),
+      );
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error al conectar con Apple: $e')),
+      );
+    } finally {
+      if (mounted) setState(() => _cargando = false);
+    }
   }
 
-  void _iniciarConFacebook() {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Inicio de sesión con Facebook disponible próximamente.'),
-      ),
-    );
+  // Iniciar sesión con Facebook
+  Future<void> _iniciarConFacebook() async {
+    setState(() => _cargando = true);
+    try {
+      final facebookProvider = FacebookAuthProvider();
+      if (kIsWeb) {
+        await FirebaseAuth.instance.signInWithPopup(facebookProvider);
+      } else {
+        await FirebaseAuth.instance.signInWithProvider(facebookProvider);
+      }
+    } on FirebaseAuthException catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(_mapearErrorFirebase(e.code))),
+      );
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error al conectar con Facebook: $e')),
+      );
+    } finally {
+      if (mounted) setState(() => _cargando = false);
+    }
   }
 
   @override

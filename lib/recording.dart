@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:record/record.dart';
 
 import 'theme/theme.dart';
@@ -385,6 +386,7 @@ class _RecordingScreenState extends State<RecordingScreen>
       subido = true;
 
       final urlDescarga = await referencia.getDownloadURL();
+      final user = FirebaseAuth.instance.currentUser;
 
       await _grabaciones.doc(id).set({
         'titulo': titulo,
@@ -392,6 +394,8 @@ class _RecordingScreenState extends State<RecordingScreen>
         'url': urlDescarga,
         'duracionSegundos': _duracion.inSeconds,
         'creadoEn': FieldValue.serverTimestamp(),
+        'userId': user?.uid,
+        'userEmail': user?.email,
       });
 
       await deleteAudioFile(ruta);
