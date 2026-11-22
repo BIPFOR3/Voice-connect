@@ -43,6 +43,7 @@ dependencies:
   http: ^1.6.0
   firebase_auth: ^7.0.1
   google_sign_in: ^6.2.2
+  firebase_app_check: ^0.5.2
 
 dev_dependencies:
   flutter_test:
@@ -54,6 +55,7 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^6.0.0
+  flutter_native_splash: ^2.4.8
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -65,6 +67,21 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
+
+  assets:
+    - assets/images/
+
+flutter_native_splash:
+  color: "#ffffff"
+  image: assets/images/voice_connect_logo.png
+
+  android_12:
+    color: "#ffffff"
+    image: assets/images/voice_connect_logo.png
+
+  android: true
+  ios: true
+  web: true
 
   # To add assets to your application, add an assets section, like this:
   # assets:

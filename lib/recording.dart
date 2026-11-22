@@ -386,6 +386,8 @@ class _RecordingScreenState extends State<RecordingScreen>
       subido = true;
 
       final urlDescarga = await referencia.getDownloadURL();
+      AudioBytesCache.set(id, bytes);
+      AudioBytesCache.set(urlDescarga, bytes);
       final user = FirebaseAuth.instance.currentUser;
 
       await _grabaciones.doc(id).set({

@@ -3,6 +3,10 @@
     <!-- Tema de splash: AppCompat requerido por Credential Manager (Google Sign-In v7) -->
     <style name="LaunchTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:windowBackground">@drawable/launch_background</item>
+        <item name="android:forceDarkAllowed">false</item>
+        <item name="android:windowFullscreen">false</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">false</item>
+        <item name="android:windowLayoutInDisplayCutoutMode">shortEdges</item>
     </style>
     <!-- Tema normal de la app -->
     <style name="NormalTheme" parent="Theme.AppCompat.Light.NoActionBar">

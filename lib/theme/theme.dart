@@ -476,8 +476,44 @@ abstract final class AppTheme {
       backgroundColor: AppSemanticColors.surfaceMain,
       elevation: 0,
     ),
+    pageTransitionsTheme: const PageTransitionsTheme(
+      builders: {
+        TargetPlatform.android: NoFadePageTransitionsBuilder(),
+        TargetPlatform.iOS: NoFadePageTransitionsBuilder(),
+        TargetPlatform.windows: NoFadePageTransitionsBuilder(),
+        TargetPlatform.macOS: NoFadePageTransitionsBuilder(),
+        TargetPlatform.linux: NoFadePageTransitionsBuilder(),
+        TargetPlatform.fuchsia: NoFadePageTransitionsBuilder(),
+      },
+    ),
     textTheme: appTextTheme,
     primaryTextTheme: appTextTheme,
     visualDensity: VisualDensity.adaptivePlatformDensity,
   );
+}
+
+class NoFadePageTransitionsBuilder extends PageTransitionsBuilder {
+  const NoFadePageTransitionsBuilder();
+
+  @override
+  Widget buildTransitions<T>(
+    PageRoute<T> route,
+    BuildContext context,
+    Animation<double> animation,
+    Animation<double> secondaryAnimation,
+    Widget child,
+  ) {
+    return child;
+  }
+}
+
+class NoFadePageRoute<T> extends PageRouteBuilder<T> {
+  final Widget child;
+
+  NoFadePageRoute({required this.child, super.settings})
+      : super(
+          pageBuilder: (context, animation, secondaryAnimation) => child,
+          transitionDuration: Duration.zero,
+          reverseTransitionDuration: Duration.zero,
+        );
 }

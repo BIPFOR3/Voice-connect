@@ -4,6 +4,8 @@ import 'package:google_sign_in/google_sign_in.dart';
 
 import 'theme/theme.dart';
 import 'auth/auth_gate.dart';
+import 'home.dart';
+import 'communities.dart';
 
 final _googleSignIn = GoogleSignIn(
   serverClientId:
@@ -175,7 +177,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
           // Ítem Home
           GestureDetector(
             onTap: () {
-              Navigator.of(context).maybePop();
+              Navigator.pushReplacement(
+                context,
+                NoFadePageRoute(child: const RecordingsHomeScreen()),
+              );
             },
             behavior: HitTestBehavior.opaque,
             child: const Padding(
@@ -191,8 +196,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
           // Ítem Comunidad / Grupos
           GestureDetector(
             onTap: () {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Grupos disponible próximamente')),
+              Navigator.pushReplacement(
+                context,
+                NoFadePageRoute(child: const CommunitiesScreen()),
               );
             },
             behavior: HitTestBehavior.opaque,
@@ -252,7 +258,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     alignment: Alignment.centerLeft,
                     child: GestureDetector(
                       onTap: () {
-                        Navigator.of(context).maybePop();
+                        if (Navigator.of(context).canPop()) {
+                          Navigator.of(context).pop();
+                        } else {
+                          Navigator.pushReplacement(
+                            context,
+                            NoFadePageRoute(child: const RecordingsHomeScreen()),
+                          );
+                        }
                       },
                       child: Container(
                         width: 36,
@@ -296,18 +309,48 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   Center(
                     child: Stack(
                       children: [
-                        Container(
-                          width: 125,
-                          height: 125,
-                          decoration: BoxDecoration(
+                        ClipOval(
+                          child: Container(
+                            width: 125,
+                            height: 125,
                             color: const Color(0xFFF0F1F3),
-                            shape: BoxShape.circle,
-                            image: user?.photoURL != null
-                                ? DecorationImage(
-                                    image: NetworkImage(user!.photoURL!),
+                            child: (user?.photoURL != null &&
+                                    user!.photoURL!.isNotEmpty)
+                                ? Image.network(
+                                    user.photoURL!,
+                                    width: 125,
+                                    height: 125,
                                     fit: BoxFit.cover,
+                                    errorBuilder: (context, error, stackTrace) {
+                                      return const Center(
+                                        child: Icon(
+                                          Icons.person,
+                                          size: 64,
+                                          color: Color(0xFF9E9E9E),
+                                        ),
+                                      );
+                                    },
+                                    loadingBuilder:
+                                        (context, child, loadingProgress) {
+                                      if (loadingProgress == null) return child;
+                                      return const Center(
+                                        child: SizedBox(
+                                          width: 24,
+                                          height: 24,
+                                          child: CircularProgressIndicator(
+                                            strokeWidth: 2,
+                                          ),
+                                        ),
+                                      );
+                                    },
                                   )
-                                : null,
+                                : const Center(
+                                    child: Icon(
+                                      Icons.person,
+                                      size: 64,
+                                      color: Color(0xFF9E9E9E),
+                                    ),
+                                  ),
                           ),
                         ),
                         Positioned(

@@ -1,5 +1,7 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_app_check/firebase_app_check.dart';
 
 import 'firebase_options.dart';
 import 'theme/theme.dart';
@@ -8,14 +10,23 @@ import 'auth/auth_gate.dart';
 export 'home.dart';
 export 'profile.dart';
 export 'recording.dart';
+export 'communities.dart';
+export 'community_new_post.dart';
+export 'community_audio_detail.dart';
+export 'audio_editor.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Inicializar Firebase
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
+  if (!kIsWeb) {
+    await FirebaseAppCheck.instance.activate(
+      providerAndroid: const AndroidDebugProvider(),
+    );
+  }
 
   runApp(const MainApp());
 }
