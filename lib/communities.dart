@@ -382,6 +382,8 @@ class _CommunitiesScreenState extends State<CommunitiesScreen> {
                     children: [
                       Text(
                         post.title,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                         style: const TextStyle(
                           fontSize: 15,
                           fontWeight: FontWeight.bold,
@@ -397,13 +399,17 @@ class _CommunitiesScreenState extends State<CommunitiesScreen> {
                             color: Color(0xFF9CA3AF),
                           ),
                           const SizedBox(width: 4),
-                          Text(
-                            isPinned
-                                ? post.authorName
-                                : '${post.authorName} | ${post.timeText}',
-                            style: const TextStyle(
-                              fontSize: 12,
-                              color: Color(0xFF9CA3AF),
+                          Expanded(
+                            child: Text(
+                              isPinned
+                                  ? post.authorName
+                                  : '${post.authorName} | ${post.timeText}',
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(
+                                fontSize: 12,
+                                color: Color(0xFF9CA3AF),
+                              ),
                             ),
                           ),
                         ],

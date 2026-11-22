@@ -8,7 +8,18 @@ import 'theme/theme.dart';
 import 'community_audio_detail.dart';
 
 class NewCommunityPostScreen extends StatefulWidget {
-  const NewCommunityPostScreen({super.key});
+  final String? initialAudioUrl;
+  final String? initialAudioTitle;
+  final String? initialDuration;
+  final String? initialGroup;
+
+  const NewCommunityPostScreen({
+    super.key,
+    this.initialAudioUrl,
+    this.initialAudioTitle,
+    this.initialDuration,
+    this.initialGroup,
+  });
 
   @override
   State<NewCommunityPostScreen> createState() => _NewCommunityPostScreenState();
@@ -20,7 +31,7 @@ class _NewCommunityPostScreenState extends State<NewCommunityPostScreen> {
   final AudioPlayer _player = AudioPlayer();
 
   String _grupoSeleccionado = 'Estudio';
-  final List<String> _grupos = ['Estudio', 'Trabajo', 'Ideas'];
+  final List<String> _grupos = ['Estudio', 'Oficina', 'Trabajo', 'Ideas'];
 
   String? _selectedAudioUrl;
   String _selectedAudioTitle = 'Mi Audio';
@@ -32,7 +43,22 @@ class _NewCommunityPostScreenState extends State<NewCommunityPostScreen> {
   @override
   void initState() {
     super.initState();
-    _cargarUltimoAudioUsuario();
+    if (widget.initialGroup != null && _grupos.contains(widget.initialGroup)) {
+      _grupoSeleccionado = widget.initialGroup!;
+    }
+    if (widget.initialAudioUrl != null && widget.initialAudioUrl!.isNotEmpty) {
+      _selectedAudioUrl = widget.initialAudioUrl;
+      _selectedAudioTitle = widget.initialAudioTitle ?? 'Mi Audio';
+      _selectedAudioDuration = widget.initialDuration ?? '00:06';
+      _tituloController.text = _selectedAudioTitle;
+      _player.setUrl(_selectedAudioUrl!).catchError((e) {
+        debugPrint('Aviso cargando audio inicial en nueva publicación: $e');
+        return null;
+      });
+    } else {
+      _cargarUltimoAudioUsuario();
+    }
+
     _player.playerStateStream.listen((state) {
       if (mounted) {
         setState(() {

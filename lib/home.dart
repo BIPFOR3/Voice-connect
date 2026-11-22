@@ -13,6 +13,7 @@ import 'theme/theme.dart';
 import 'recording.dart';
 import 'profile.dart';
 import 'communities.dart';
+import 'community_new_post.dart';
 import 'audio_editor.dart';
 import 'audio_storage.dart';
 
@@ -30,7 +31,8 @@ class _RecordingsHomeScreenState extends State<RecordingsHomeScreen> {
 
   final TextEditingController _searchController = TextEditingController();
   String _searchQuery = '';
-  int _selectedTabIndex = 0; // 0: Todas, 1: Favoritos
+  int _selectedTabIndex = 0; // 0: Todas, 1: Estudio, 2: Oficina, 3: Favoritos
+  final List<String> _homeTabs = ['Todas', 'Estudio', 'Oficina', 'Favoritos'];
   final Set<String> _favoritosIds = {};
   StreamSubscription<DocumentSnapshot<Map<String, dynamic>>>? _favoritosSub;
 
@@ -120,9 +122,22 @@ class _RecordingsHomeScreenState extends State<RecordingsHomeScreen> {
     }
   }
 
-  void _compartirGrabacion(String url) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Función de compartir próximamente')),
+  void _compartirGrabacion({
+    required String title,
+    required String url,
+    required String durationText,
+    String? grupo,
+  }) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => NewCommunityPostScreen(
+          initialAudioUrl: url,
+          initialAudioTitle: title,
+          initialDuration: durationText,
+          initialGroup: (grupo != null && grupo != 'Todas') ? grupo : 'Estudio',
+        ),
+      ),
     );
   }
 
@@ -232,9 +247,191 @@ class _RecordingsHomeScreenState extends State<RecordingsHomeScreen> {
     );
   }
 
-  void _moverGrabacion(String id, String title) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Mover "$title" a otra carpeta próximamente')),
+  void _moverGrabacion(String id, String title, String? categoriaActual) {
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      backgroundColor: Colors.white,
+      builder: (ctx) {
+        return SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Center(
+                  child: Container(
+                    width: 40,
+                    height: 4,
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFD1D5DB),
+                      borderRadius: BorderRadius.circular(2),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                const Text(
+                  'Mover grabación',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  'Elige la carpeta o sección para "$title":',
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                    fontSize: 13,
+                    color: Color(0xFF6B7280),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                _buildMoverOption(
+                  ctx: ctx,
+                  id: id,
+                  title: title,
+                  carpetaNombre: 'Todas',
+                  descripcion: 'Carpeta principal / General',
+                  icon: Icons.folder_outlined,
+                  isSelected: (categoriaActual == null ||
+                      categoriaActual == 'Todas' ||
+                      categoriaActual.isEmpty),
+                ),
+                const SizedBox(height: 10),
+                _buildMoverOption(
+                  ctx: ctx,
+                  id: id,
+                  title: title,
+                  carpetaNombre: 'Estudio',
+                  descripcion: 'Archivos y notas de estudio',
+                  icon: Icons.school_outlined,
+                  isSelected: (categoriaActual == 'Estudio'),
+                ),
+                const SizedBox(height: 10),
+                _buildMoverOption(
+                  ctx: ctx,
+                  id: id,
+                  title: title,
+                  carpetaNombre: 'Oficina',
+                  descripcion: 'Reuniones y trabajo de oficina',
+                  icon: Icons.business_center_outlined,
+                  isSelected: (categoriaActual == 'Oficina'),
+                ),
+                const SizedBox(height: 12),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildMoverOption({
+    required BuildContext ctx,
+    required String id,
+    required String title,
+    required String carpetaNombre,
+    required String descripcion,
+    required IconData icon,
+    required bool isSelected,
+  }) {
+    return InkWell(
+      onTap: () async {
+        Navigator.pop(ctx);
+        try {
+          await FirebaseFirestore.instance
+              .collection('grabaciones')
+              .doc(id)
+              .update({'categoria': carpetaNombre});
+
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(
+                  carpetaNombre == 'Todas'
+                      ? 'Grabación movida a "Todas" (General)'
+                      : 'Grabación movida a "$carpetaNombre"',
+                ),
+                behavior: SnackBarBehavior.floating,
+                duration: const Duration(seconds: 2),
+              ),
+            );
+          }
+        } catch (e) {
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('Error al mover la grabación: $e')),
+            );
+          }
+        }
+      },
+      borderRadius: BorderRadius.circular(14),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+        decoration: BoxDecoration(
+          color: isSelected ? const Color(0xFFEFF6FF) : const Color(0xFFF9FAFB),
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(
+            color: isSelected ? const Color(0xFF1D5BF7) : const Color(0xFFE5E7EB),
+            width: isSelected ? 1.5 : 1.0,
+          ),
+        ),
+        child: Row(
+          children: [
+            Container(
+              width: 40,
+              height: 40,
+              decoration: BoxDecoration(
+                color: isSelected
+                    ? const Color(0xFF1D5BF7).withValues(alpha: 0.12)
+                    : const Color(0xFFE5E7EB),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Icon(
+                icon,
+                color: isSelected ? const Color(0xFF1D5BF7) : const Color(0xFF4B5563),
+                size: 22,
+              ),
+            ),
+            const SizedBox(width: 14),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    carpetaNombre,
+                    style: TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.bold,
+                      color: isSelected ? const Color(0xFF1D5BF7) : Colors.black87,
+                    ),
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    descripcion,
+                    style: const TextStyle(
+                      fontSize: 12,
+                      color: Color(0xFF6B7280),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            if (isSelected)
+              const Icon(
+                Icons.check_circle,
+                color: Color(0xFF1D5BF7),
+                size: 22,
+              ),
+          ],
+        ),
+      ),
     );
   }
 
@@ -504,75 +701,48 @@ class _RecordingsHomeScreenState extends State<RecordingsHomeScreen> {
   }
 
   Widget _buildTabsSection() {
-    final isTodas = _selectedTabIndex == 0;
-
     return Row(
       children: [
-        // Tab Activa / Inactiva: Todas
-        Expanded(
-          child: GestureDetector(
-            onTap: () => setState(() => _selectedTabIndex = 0),
-            behavior: HitTestBehavior.opaque,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8),
-                  child: Text(
-                    'Todas',
-                    style: TextStyle(
-                      fontSize: 15,
-                      fontWeight: isTodas ? FontWeight.bold : FontWeight.w600,
-                      color: isTodas ? Colors.black : const Color(0xFF4B5563),
+        for (int index = 0; index < _homeTabs.length; index++) ...[
+          if (index > 0) const SizedBox(width: 8),
+          Expanded(
+            child: GestureDetector(
+              onTap: () => setState(() => _selectedTabIndex = index),
+              behavior: HitTestBehavior.opaque,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8),
+                    child: Text(
+                      _homeTabs[index],
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: _selectedTabIndex == index
+                            ? FontWeight.bold
+                            : FontWeight.w600,
+                        color: _selectedTabIndex == index
+                            ? Colors.black
+                            : const Color(0xFF4B5563),
+                      ),
                     ),
                   ),
-                ),
-                Container(
-                  height: 3.5,
-                  decoration: BoxDecoration(
-                    color: isTodas
-                        ? const Color(0xFF1D5BF7)
-                        : const Color(0xFFE5E7EB),
-                    borderRadius: BorderRadius.circular(2),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-        const SizedBox(width: 16),
-        // Tab Activa / Inactiva: Favoritos
-        Expanded(
-          child: GestureDetector(
-            onTap: () => setState(() => _selectedTabIndex = 1),
-            behavior: HitTestBehavior.opaque,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8),
-                  child: Text(
-                    'Favoritos',
-                    style: TextStyle(
-                      fontSize: 15,
-                      fontWeight: !isTodas ? FontWeight.bold : FontWeight.w600,
-                      color: !isTodas ? Colors.black : const Color(0xFF4B5563),
+                  Container(
+                    height: 3.5,
+                    decoration: BoxDecoration(
+                      color: _selectedTabIndex == index
+                          ? const Color(0xFF1D5BF7)
+                          : const Color(0xFFE5E7EB),
+                      borderRadius: BorderRadius.circular(2),
                     ),
                   ),
-                ),
-                Container(
-                  height: 3.5,
-                  decoration: BoxDecoration(
-                    color: !isTodas
-                        ? const Color(0xFF1D5BF7)
-                        : const Color(0xFFE5E7EB),
-                    borderRadius: BorderRadius.circular(2),
-                  ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
-        ),
+        ],
       ],
     );
   }
@@ -620,12 +790,44 @@ class _RecordingsHomeScreenState extends State<RecordingsHomeScreen> {
           final title = (data['titulo'] as String? ?? '').toLowerCase();
           final matchesSearch =
               _searchQuery.isEmpty || title.contains(_searchQuery.toLowerCase());
+          if (!matchesSearch) return false;
+
           final isFav = _favoritosIds.contains(doc.id);
-          if (_selectedTabIndex == 1 && !isFav) return false;
-          return matchesSearch;
+          final categoria = (data['categoria'] as String? ?? 'Todas');
+
+          // 0: Todas, 1: Estudio, 2: Oficina, 3: Favoritos
+          if (_selectedTabIndex == 1) {
+            return categoria.toLowerCase() == 'estudio';
+          } else if (_selectedTabIndex == 2) {
+            return categoria.toLowerCase() == 'oficina';
+          } else if (_selectedTabIndex == 3) {
+            return isFav;
+          }
+          return true; // 0: Todas muestra todo
         }).toList();
 
         if (filteredDocs.isEmpty) {
+          IconData emptyIcon = Icons.mic_none;
+          String emptyMsg = '';
+
+          if (_selectedTabIndex == 3) {
+            emptyIcon = Icons.favorite_border;
+            emptyMsg = 'No tienes grabaciones en favoritos.';
+          } else if (_selectedTabIndex == 1) {
+            emptyIcon = Icons.school_outlined;
+            emptyMsg =
+                'No tienes grabaciones en la carpeta "Estudio".\nUsa la opción "Mover" en el menú para organizar audios aquí.';
+          } else if (_selectedTabIndex == 2) {
+            emptyIcon = Icons.business_center_outlined;
+            emptyMsg =
+                'No tienes grabaciones en la carpeta "Oficina".\nUsa la opción "Mover" en el menú para organizar audios aquí.';
+          } else {
+            emptyIcon = Icons.mic_none;
+            emptyMsg = _searchQuery.isNotEmpty
+                ? 'No se encontraron grabaciones con "$_searchQuery".'
+                : 'Aún no tienes grabaciones guardadas.\nToca el micrófono para comenzar.';
+          }
+
           return SingleChildScrollView(
             physics: const AlwaysScrollableScrollPhysics(),
             padding: const EdgeInsets.only(
@@ -638,19 +840,13 @@ class _RecordingsHomeScreenState extends State<RecordingsHomeScreen> {
               child: Column(
                 children: [
                   Icon(
-                    _selectedTabIndex == 1
-                        ? Icons.favorite_border
-                        : Icons.mic_none,
+                    emptyIcon,
                     size: 48,
                     color: AppColors.gs500,
                   ),
                   const SizedBox(height: AppSpacing.spacing200),
                   Text(
-                    _selectedTabIndex == 1
-                        ? 'No tienes grabaciones en favoritos.'
-                        : (_searchQuery.isNotEmpty
-                            ? 'No se encontraron grabaciones con "$_searchQuery".'
-                            : 'Aún no tienes grabaciones guardadas.\nToca el micrófono para comenzar.'),
+                    emptyMsg,
                     textAlign: TextAlign.center,
                     style: AppTypography.body2.copyWith(
                       color: AppCardTokens.subtLabel,
@@ -683,6 +879,7 @@ class _RecordingsHomeScreenState extends State<RecordingsHomeScreen> {
             final isExpanded = _activeDocId == id;
             final isFav = _favoritosIds.contains(id);
             final transcripcion = data['transcripcion'] as String?;
+            final categoria = data['categoria'] as String?;
 
             return Padding(
               padding: const EdgeInsets.only(bottom: AppSpacing.spacing300),
@@ -695,9 +892,15 @@ class _RecordingsHomeScreenState extends State<RecordingsHomeScreen> {
                         durationSeconds: data['duracionSegundos'] as num?,
                         isPlaying: _isPlaying,
                         isFavorite: isFav,
+                        categoria: categoria,
                         player: _player,
                         onPlayToggle: () => _reproducir(id, url),
-                        onCompartir: () => _compartirGrabacion(url),
+                        onCompartir: () => _compartirGrabacion(
+                          title: title,
+                          url: url,
+                          durationText: duration,
+                          grupo: categoria,
+                        ),
                         onRenombrar: () => _renombrarGrabacion(id, title),
                         onEditar: () => _editarGrabacion(
                           id,
@@ -714,7 +917,7 @@ class _RecordingsHomeScreenState extends State<RecordingsHomeScreen> {
                         ),
                         onFavoritos: () => _toggleFavorito(id),
                         onDuplicar: () => _duplicarGrabacion(data),
-                        onMover: () => _moverGrabacion(id, title),
+                        onMover: () => _moverGrabacion(id, title, categoria),
                         onDelete: () => _confirmarEliminar(id, title, url),
                       )
                     : _RecordingCard(
@@ -722,9 +925,15 @@ class _RecordingsHomeScreenState extends State<RecordingsHomeScreen> {
                         date: date,
                         duration: duration,
                         isFavorite: isFav,
+                        categoria: categoria,
                         onPlayToggle:
                             url.isNotEmpty ? () => _reproducir(id, url) : null,
-                        onCompartir: () => _compartirGrabacion(url),
+                        onCompartir: () => _compartirGrabacion(
+                          title: title,
+                          url: url,
+                          durationText: duration,
+                          grupo: categoria,
+                        ),
                         onRenombrar: () => _renombrarGrabacion(id, title),
                         onEditar: () => _editarGrabacion(
                           id,
@@ -741,7 +950,7 @@ class _RecordingsHomeScreenState extends State<RecordingsHomeScreen> {
                         ),
                         onFavoritos: () => _toggleFavorito(id),
                         onDuplicar: () => _duplicarGrabacion(data),
-                        onMover: () => _moverGrabacion(id, title),
+                        onMover: () => _moverGrabacion(id, title, categoria),
                         onDelete: () => _confirmarEliminar(id, title, url),
                       ),
               ),
@@ -866,6 +1075,7 @@ class _RecordingPopupMenu extends StatelessWidget {
   final VoidCallback onFavoritos;
   final VoidCallback onDuplicar;
   final VoidCallback onMover;
+  final VoidCallback onEliminar;
 
   const _RecordingPopupMenu({
     required this.isFavorite,
@@ -876,6 +1086,7 @@ class _RecordingPopupMenu extends StatelessWidget {
     required this.onFavoritos,
     required this.onDuplicar,
     required this.onMover,
+    required this.onEliminar,
   });
 
   PopupMenuItem<String> _buildItem({
@@ -883,6 +1094,7 @@ class _RecordingPopupMenu extends StatelessWidget {
     required IconData icon,
     required String label,
     Color? iconColor,
+    Color? textColor,
   }) {
     return PopupMenuItem<String>(
       value: value,
@@ -900,7 +1112,7 @@ class _RecordingPopupMenu extends StatelessWidget {
           Text(
             label,
             style: AppTypography.body2.copyWith(
-              color: AppColors.gs1000,
+              color: textColor ?? AppColors.gs1000,
               fontWeight: FontWeight.w500,
               fontSize: 14,
             ),
@@ -951,6 +1163,9 @@ class _RecordingPopupMenu extends StatelessWidget {
           case 'mover':
             onMover();
             break;
+          case 'eliminar':
+            onEliminar();
+            break;
         }
       },
       itemBuilder: (context) => [
@@ -990,6 +1205,13 @@ class _RecordingPopupMenu extends StatelessWidget {
           icon: Icons.drive_file_move_outlined,
           label: 'Mover',
         ),
+        _buildItem(
+          value: 'eliminar',
+          icon: Icons.delete_outline,
+          label: 'Eliminar',
+          iconColor: const Color(0xFFEF4444),
+          textColor: const Color(0xFFEF4444),
+        ),
       ],
     );
   }
@@ -1004,6 +1226,7 @@ class _RecordingCard extends StatelessWidget {
   final String date;
   final String duration;
   final bool isFavorite;
+  final String? categoria;
   final VoidCallback? onPlayToggle;
   final VoidCallback onCompartir;
   final VoidCallback onRenombrar;
@@ -1012,13 +1235,14 @@ class _RecordingCard extends StatelessWidget {
   final VoidCallback onFavoritos;
   final VoidCallback onDuplicar;
   final VoidCallback onMover;
-  final VoidCallback? onDelete;
+  final VoidCallback onDelete;
 
   const _RecordingCard({
     required this.title,
     required this.date,
     required this.duration,
     this.isFavorite = false,
+    this.categoria,
     this.onPlayToggle,
     required this.onCompartir,
     required this.onRenombrar,
@@ -1027,7 +1251,7 @@ class _RecordingCard extends StatelessWidget {
     required this.onFavoritos,
     required this.onDuplicar,
     required this.onMover,
-    this.onDelete,
+    required this.onDelete,
   });
 
   @override
@@ -1101,12 +1325,39 @@ class _RecordingCard extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: 3),
-                Text(
-                  date,
-                  style: const TextStyle(
-                    fontSize: 12,
-                    color: Color(0xFF9CA3AF),
-                  ),
+                Row(
+                  children: [
+                    Text(
+                      date,
+                      style: const TextStyle(
+                        fontSize: 12,
+                        color: Color(0xFF9CA3AF),
+                      ),
+                    ),
+                    if (categoria != null &&
+                        categoria != 'Todas' &&
+                        categoria!.isNotEmpty) ...[
+                      const SizedBox(width: 6),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 6,
+                          vertical: 1.5,
+                        ),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFEFF6FF),
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                        child: Text(
+                          categoria!,
+                          style: const TextStyle(
+                            fontSize: 10,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFF1D5BF7),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ],
                 ),
               ],
             ),
@@ -1135,6 +1386,7 @@ class _RecordingCard extends StatelessWidget {
                 onFavoritos: onFavoritos,
                 onDuplicar: onDuplicar,
                 onMover: onMover,
+                onEliminar: onDelete,
               ),
             ],
           ),
@@ -1153,6 +1405,7 @@ class _ExpandedRecordingCard extends StatelessWidget {
   final num? durationSeconds;
   final bool isPlaying;
   final bool isFavorite;
+  final String? categoria;
   final AudioPlayer player;
   final VoidCallback onPlayToggle;
   final VoidCallback onCompartir;
@@ -1169,6 +1422,7 @@ class _ExpandedRecordingCard extends StatelessWidget {
     required this.durationSeconds,
     required this.isPlaying,
     required this.isFavorite,
+    this.categoria,
     required this.player,
     required this.onPlayToggle,
     required this.onCompartir,
@@ -1232,6 +1486,7 @@ class _ExpandedRecordingCard extends StatelessWidget {
                 onFavoritos: onFavoritos,
                 onDuplicar: onDuplicar,
                 onMover: onMover,
+                onEliminar: onDelete,
               ),
             ],
           ),
