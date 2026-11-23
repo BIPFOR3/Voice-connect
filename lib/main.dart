@@ -38,7 +38,7 @@ class MainApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Mis Grabaciones',
+      title: 'Voice Connect',
       theme: AppTheme.light,
       home: const AuthGate(),
     );
